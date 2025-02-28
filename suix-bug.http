@@ -2,7 +2,7 @@
 # the balance query API and coin API for 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1
 # gives wrong result
 
-### [BUG] suix_getAllBalances give incorrect result
+### [BUG] suix_getAllBalances give incorrect result, should be 0
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -30,7 +30,7 @@ Host: fullnode.testnet.sui.io
 #  ]
 #}
 ####################################
-### [BUG] suix_getBalance give us incorrect result
+### [BUG] suix_getBalance give us incorrect result, shoulde be 0
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -56,6 +56,8 @@ Host: fullnode.testnet.sui.io
 //  }
 //}
 ### [BUG] suix_getCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
+### should have no coin, and query for the owner of the coin id should be 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4
+### which we queried in the later API shows the correct owner
 POST /
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
