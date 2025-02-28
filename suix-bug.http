@@ -187,7 +187,7 @@ Host: fullnode.testnet.sui.io
 
 ### Context however the owner of this above Object A shows a different owner: 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4 when we used sui_getObject
 ### Function call: sui_getObject, param: Object A, Incorrect Result: 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4 (Account B), Expected result: Account A
-### which is not what we queried before
+### which is opposite of the previous getcoin / getallcoins query, which showed Account A owns Object A.
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -210,6 +210,7 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+### Server Response:
 ###
 #{
 #  "jsonrpc": "2.0",
