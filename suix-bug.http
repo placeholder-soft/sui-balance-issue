@@ -16,6 +16,20 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+###################################
+# {
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": [
+#    {
+#      "coinType": "0x2::sui::SUI",
+#      "coinObjectCount": 1,
+#      "totalBalance": "100000000",
+#      "lockedBalance": {}
+#    }
+#  ]
+#}
+####################################
 ### [BUG] suix_getBalance give us incorrect result
 POST / HTTP/1.1
 Content-Type: application/json
@@ -31,7 +45,16 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
-
+//{
+//  "jsonrpc": "2.0",
+//  "id": 1,
+//  "result": {
+//    "coinType": "0x2::sui::SUI",
+//    "coinObjectCount": 1,
+//    "totalBalance": "100000000",
+//    "lockedBalance": {}
+//  }
+//}
 ### [BUG] suix_getCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
 POST /
 Content-Type: application/json
@@ -47,6 +70,27 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+###
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "data": [
+#      {
+#        "coinType": "0x2::sui::SUI",
+#        "coinObjectId": "0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a",
+#        "version": "356386811",
+#        "digest": "9X5ueqREVzyGFhSDvqwhRiSqMfatjDTLCKSHXdA4J5PT",
+#        "balance": "100000000",
+#        "previousTransaction": "E7v8EXwJcwhG5ncayV38uQ1bj6SZ8ByqKWQRYAq4jJKg"
+#      }
+#    ],
+#    "nextCursor": null,
+#    "hasNextPage": false
+#  }
+#}
+###
+
 ### [BUG] suix_getAllCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
 POST / HTTP/1.1
 Content-Type: application/json
@@ -61,7 +105,26 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
-
+############
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "data": [
+#      {
+#        "coinType": "0x2::sui::SUI",
+#        "coinObjectId": "0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a",
+#        "version": "356386811",
+#        "digest": "9X5ueqREVzyGFhSDvqwhRiSqMfatjDTLCKSHXdA4J5PT",
+#        "balance": "100000000",
+#        "previousTransaction": "E7v8EXwJcwhG5ncayV38uQ1bj6SZ8ByqKWQRYAq4jJKg"
+#      }
+#    ],
+#    "nextCursor": null,
+#    "hasNextPage": false
+#  }
+#}
+############
 
 ### [Correct] however, sui_getObject shows owner of the coin is 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4
 ### which is not what we queried before
@@ -87,6 +150,47 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+###
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "data": {
+#      "objectId": "0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a",
+#      "version": "356386813",
+#      "digest": "J7a8he4ucStPbjRt6kDZgkT6jYG9N8Euc5BswxGgaadJ",
+#      "type": "0x2::coin::Coin<0x2::sui::SUI>",
+#      "owner": {
+#        "AddressOwner": "0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4"
+#      },
+#      "previousTransaction": "5jGegPdFuwwZrCGGqj9eFeJXgvmTRHt79ibKb4g7vWr3",
+#      "storageRebate": "988000",
+#      "display": {
+#        "data": null,
+#        "error": null
+#      },
+#      "content": {
+#        "dataType": "moveObject",
+#        "type": "0x2::coin::Coin<0x2::sui::SUI>",
+#        "hasPublicTransfer": true,
+#        "fields": {
+#          "balance": "100000000",
+#          "id": {
+#            "id": "0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a"
+#          }
+#        }
+#      },
+#      "bcs": {
+#        "dataType": "moveObject",
+#        "type": "0x2::coin::Coin<0x2::sui::SUI>",
+#        "hasPublicTransfer": true,
+#        "version": 356386813,
+#        "bcsBytes": "BF/lh3C+rRLsb4hpN44bqY5LaQGs2DPbnhW55joOUyoA4fUFAAAAAA=="
+#      }
+#    }
+#  }
+#}
+###
 
 ### [Correct] suix_getOwnedObjects query shows 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1 own nothing
 POST / HTTP/1.1
@@ -115,4 +219,14 @@ Host: fullnode.testnet.sui.io
 }
 
 
-
+####
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "data": [],
+#    "nextCursor": null,
+#    "hasNextPage": false
+#  }
+#}
+####
