@@ -1,8 +1,51 @@
-## Bug Description
-# the balance query API and coin API for 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1
-# gives wrong result
+### Bug 1 Context: Account 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1 (which I will call Account A) owns no object but returns a balance of 100000000 when calling getallbalance, getsuicoin, getbalance
+### This should not be the case.
 
-### [BUG] suix_getAllBalances give incorrect result, should be 0
+### [Correct] suix_getOwnedObjects query shows 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1 own nothing
+POST / HTTP/1.1
+Content-Type: application/json
+Host: fullnode.testnet.sui.io
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "suix_getOwnedObjects",
+  "params": [
+    "0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1",
+    {
+
+      "options": {
+        "showType": true,
+        "showOwner": true,
+        "showPreviousTransaction": true,
+        "showDisplay": false,
+        "showContent": false,
+        "showBcs": false,
+        "showStorageRebate": false
+      }
+    }
+  ]
+}
+
+####
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "data": [],
+#    "nextCursor": null,
+#    "hasNextPage": false
+#  }
+#}
+####
+
+
+
+## Incorrect API Result
+# gives the incorrect result for certain the following api calls
+
+
+### [BUG] Function call: suix_getAllBalances, param: Wallet A, Incorrect Result: 100000000, Expected result:0 
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -16,6 +59,7 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+### Response server:
 ###################################
 # {
 #  "jsonrpc": "2.0",
@@ -30,7 +74,9 @@ Host: fullnode.testnet.sui.io
 #  ]
 #}
 ####################################
-### [BUG] suix_getBalance give us incorrect result, shoulde be 0
+
+
+### [BUG] Function call: suix_getBalance, param: Wallet A, Incorrect Result: 100000000, Expected result:0 
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -45,6 +91,7 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+### Response server:
 ####
 #{
 #  "jsonrpc": "2.0",
@@ -58,9 +105,10 @@ Host: fullnode.testnet.sui.io
 #}
 ####
 
-### [BUG] suix_getCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
-### should have no coin, and query for the owner of the coin id should be 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4
-### which we queried in the later API shows the correct owner
+### Bug 2 Context: Account A should own no coins meaning [] (empty array) but returns a coin with objectID:0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a. 
+
+
+### [BUG] Function call: suix_getCoins, param: Wallet A, Incorrect Result: has coin with objectID:0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a (which we will call Object A) with balance of 100000000, Expected result: [] (empty array)
 POST /
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -75,6 +123,7 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+### Response server:
 ###
 #{
 #  "jsonrpc": "2.0",
@@ -95,8 +144,12 @@ Host: fullnode.testnet.sui.io
 #  }
 #}
 ###
+### We queried later that the owner of the coin is another address: 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4 which we call Account B
+### We show the query of this above call later down in another response.
 
-### [BUG] suix_getAllCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
+
+### [BUG] function call suix_getAllCoins has same issue as function call: suix_getCoins  
+### Should have [] (empty array) but shows that it has a coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a (Object A)
 POST / HTTP/1.1
 Content-Type: application/json
 Host: fullnode.testnet.sui.io
@@ -110,6 +163,7 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
+### Server Response:
 ############
 #{
 #  "jsonrpc": "2.0",
@@ -131,7 +185,8 @@ Host: fullnode.testnet.sui.io
 #}
 ############
 
-### [Correct] however, sui_getObject shows owner of the coin is 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4
+### Context however the owner of this above Object A shows a different owner: 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4 when we used sui_getObject
+### Function call: sui_getObject, param: Object A, Incorrect Result: 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4 (Account B), Expected result: Account A
 ### which is not what we queried before
 POST / HTTP/1.1
 Content-Type: application/json
@@ -196,42 +251,3 @@ Host: fullnode.testnet.sui.io
 #  }
 #}
 ###
-
-### [Correct] suix_getOwnedObjects query shows 0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1 own nothing
-POST / HTTP/1.1
-Content-Type: application/json
-Host: fullnode.testnet.sui.io
-
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "suix_getOwnedObjects",
-  "params": [
-    "0xfd2f31461206c437718b004cf593e1127bc23ce4f1a55b0e5efae0cf022b5cb1",
-    {
-
-      "options": {
-        "showType": true,
-        "showOwner": true,
-        "showPreviousTransaction": true,
-        "showDisplay": false,
-        "showContent": false,
-        "showBcs": false,
-        "showStorageRebate": false
-      }
-    }
-  ]
-}
-
-
-####
-#{
-#  "jsonrpc": "2.0",
-#  "id": 1,
-#  "result": {
-#    "data": [],
-#    "nextCursor": null,
-#    "hasNextPage": false
-#  }
-#}
-####
