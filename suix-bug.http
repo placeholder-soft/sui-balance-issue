@@ -45,16 +45,19 @@ Host: fullnode.testnet.sui.io
   ]
 }
 
-//{
-//  "jsonrpc": "2.0",
-//  "id": 1,
-//  "result": {
-//    "coinType": "0x2::sui::SUI",
-//    "coinObjectCount": 1,
-//    "totalBalance": "100000000",
-//    "lockedBalance": {}
-//  }
-//}
+####
+#{
+#  "jsonrpc": "2.0",
+#  "id": 1,
+#  "result": {
+#    "coinType": "0x2::sui::SUI",
+#    "coinObjectCount": 1,
+#    "totalBalance": "100000000",
+#    "lockedBalance": {}
+#  }
+#}
+####
+
 ### [BUG] suix_getCoins shows that it has coin with ojbectId: 0x045fe58770bead12ec6f8869378e1ba98e4b6901acd833db9e15b9e63a0e532a
 ### should have no coin, and query for the owner of the coin id should be 0x55cbaa4598029658b7c3be3ffa38b2b7f38ccaf099a3f67e227400cfce2c5fc4
 ### which we queried in the later API shows the correct owner
